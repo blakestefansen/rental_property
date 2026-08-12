@@ -9,9 +9,10 @@ MONTHLY_PROPERTY_TAXES = 250
 MONTHLY_INSURANCE = 100
 MONTHLY_MAINTENANCE = 150
 MONTHLY_REPAIRS = 100
-VACANCY_RATE = 0.05  # % of gross rent set aside for vacancy
-CAPEX_RATE = 0.05    # % of gross rent set aside for capex reserve
+VACANCY_RATE = 0.05      # % of gross rent set aside for vacancy
+CAPEX_RATE = 0.05        # % of gross rent set aside for capex reserve
 PMI_RATE = 0.01
+CLOSING_COST_RATE = 0.03  # % of listing price — loan origination, title, appraisal, recording, etc.
 
 # Sum of user-entered operating costs — NOT debt service
 MONTHLY_OPERATING_EXPENSES = (
@@ -21,6 +22,9 @@ MONTHLY_OPERATING_EXPENSES = (
 loan_amount = LISTING_PRICE - DOWN_PAYMENT
 monthly_rate = INTEREST_RATE / 12
 n_payments = LOAN_TERM_YEARS * 12
+
+closing_costs = LISTING_PRICE * CLOSING_COST_RATE
+total_cash_invested = DOWN_PAYMENT + closing_costs
 
 monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate) ** n_payments) / (
     (1 + monthly_rate) ** n_payments - 1
@@ -55,14 +59,16 @@ cap_rate = (noi / HOUSE_PRICE) * 100
 annual_debt_service = year1_interest + year1_principal
 annual_cash_flow = noi - annual_debt_service - annual_pmi
 monthly_cash_flow = annual_cash_flow / 12
-cash_on_cash_roi = (annual_cash_flow / DOWN_PAYMENT) * 100
+cash_on_cash_roi = (annual_cash_flow / total_cash_invested) * 100
 
 # Total return also credits equity built via principal paydown
 total_return = annual_cash_flow + year1_principal
-total_roi = (total_return / DOWN_PAYMENT) * 100
+total_roi = (total_return / total_cash_invested) * 100
 
 print(f"HOUSE_PRICE: ${HOUSE_PRICE:,.2f}")
 print(f"DOWN_PAYMENT: ${DOWN_PAYMENT:,.2f}")
+print(f"CLOSING_COSTS ({CLOSING_COST_RATE:.0%} of price): ${closing_costs:,.2f}")
+print(f"TOTAL_CASH_INVESTED (down payment + closing costs): ${total_cash_invested:,.2f}")
 print(f"LOAN_AMOUNT: ${loan_amount:,.2f}")
 print(f"LOAN_TERM_YEARS: {LOAN_TERM_YEARS}")
 print(f"MONTHLY_MORTGAGE_PAYMENT (P&I): ${monthly_payment:,.2f}")
@@ -86,7 +92,7 @@ print(f"YEAR 1 PRINCIPAL PAID: ${year1_principal:,.2f}")
 print(f"ANNUAL DEBT SERVICE (P&I): ${annual_debt_service:,.2f}")
 print(f"ANNUAL CASH FLOW (levered): ${annual_cash_flow:,.2f}")
 print(f"MONTHLY CASH FLOW (levered): ${monthly_cash_flow:,.2f}")
-print(f"CASH-ON-CASH ROI: {cash_on_cash_roi:.2f}%")
+print(f"CASH-ON-CASH ROI (on total cash invested): {cash_on_cash_roi:.2f}%")
 print()
 print(f"TOTAL RETURN (cash flow + principal paydown): ${total_return:,.2f}")
-print(f"TOTAL ROI (incl. equity build): {total_roi:.2f}%")
+print(f"TOTAL ROI (incl. equity build, on total cash invested): {total_roi:.2f}%")
