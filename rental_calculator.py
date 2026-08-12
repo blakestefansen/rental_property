@@ -5,10 +5,18 @@ INTEREST_RATE = 0.04
 LOAN_TERM_YEARS = 30
 
 MONTHLY_RENT = 2000
-MONTHLY_OPERATING_EXPENSES = 600  # taxes, insurance, maintenance — NOT debt service
-VACANCY_RATE = 0.05               # % of gross rent set aside for vacancy
-CAPEX_RATE = 0.05                 # % of gross rent set aside for capex reserve
+MONTHLY_PROPERTY_TAXES = 250
+MONTHLY_INSURANCE = 100
+MONTHLY_MAINTENANCE = 150
+MONTHLY_REPAIRS = 100
+VACANCY_RATE = 0.05  # % of gross rent set aside for vacancy
+CAPEX_RATE = 0.05    # % of gross rent set aside for capex reserve
 PMI_RATE = 0.01
+
+# Sum of user-entered operating costs — NOT debt service
+MONTHLY_OPERATING_EXPENSES = (
+    MONTHLY_PROPERTY_TAXES + MONTHLY_INSURANCE + MONTHLY_MAINTENANCE + MONTHLY_REPAIRS
+)
 
 loan_amount = LISTING_PRICE - DOWN_PAYMENT
 monthly_rate = INTEREST_RATE / 12
@@ -61,7 +69,11 @@ print(f"MONTHLY_MORTGAGE_PAYMENT (P&I): ${monthly_payment:,.2f}")
 print(f"MONTHLY_PMI: ${monthly_pmi:,.2f}")
 print()
 print(f"MONTHLY_RENT: ${MONTHLY_RENT:,.2f}")
-print(f"MONTHLY_OPERATING_EXPENSES: ${MONTHLY_OPERATING_EXPENSES:,.2f}")
+print(f"MONTHLY_PROPERTY_TAXES: ${MONTHLY_PROPERTY_TAXES:,.2f}")
+print(f"MONTHLY_INSURANCE: ${MONTHLY_INSURANCE:,.2f}")
+print(f"MONTHLY_MAINTENANCE: ${MONTHLY_MAINTENANCE:,.2f}")
+print(f"MONTHLY_REPAIRS: ${MONTHLY_REPAIRS:,.2f}")
+print(f"MONTHLY_OPERATING_EXPENSES (sum of above): ${MONTHLY_OPERATING_EXPENSES:,.2f}")
 print(f"VACANCY_RESERVE ({VACANCY_RATE:.0%} of rent): ${annual_vacancy_loss/12:,.2f}/mo")
 print(f"CAPEX_RESERVE ({CAPEX_RATE:.0%} of rent): ${annual_capex_reserve/12:,.2f}/mo")
 print()
