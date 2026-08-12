@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3507 Southland Dr — Underwriting Ledger</title>
+<style>
+  :root {
+    --paper: #f3f6ee;
+    --paper-bar: #e3ecdc;
+    --paper-raised: #fbfdf8;
+    --ink: #1b241c;
+    --ink-soft: #4b5b4c;
+    --rule: #c7d6bd;
+    --rule-strong: #9fb392;
+    --accent: #1d4e89;
+    --accent-soft: #dbe6f1;
+    --good: #2e7d46;
+    --good-soft: #dcedd9;
+    --caution: #a3690a;
+    --caution-soft: #f1e2c4;
+    --critical: #a6332b;
+    --shadow: rgba(27, 36, 28, 0.16);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0e1512;
+      --paper-bar: #16211a;
+      --paper-raised: #121b16;
+      --ink: #d9ecd4;
+      --ink-soft: #8fae89;
+      --rule: #2c3f2e;
+      --rule-strong: #3d5940;
+      --accent: #6fa8dc;
+      --accent-soft: #1c2e40;
+      --good: #52b96a;
+      --good-soft: #16301f;
+      --caution: #e0a83a;
+      --caution-soft: #3a2c10;
+      --critical: #e1584a;
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--paper-bar) 0px,
+      var(--paper-bar) 22px,
+      transparent 22px,
+      transparent 44px
+    );
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 32px 16px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    max-width: 860px;
+    margin: 0 auto;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-strong);
+    box-shadow: 0 18px 40px -20px var(--shadow);
+    padding: 40px 44px 32px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet {
+      animation: rise 0.5s ease-out both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+
+  h1, h2, h3 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .num {
+    font-family: "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, "Liberation Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    position: relative;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .eyebrow {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 8px;
+  }
+
+  h1 {
+    font-size: 34px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    margin: 8px 0 18px;
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 62ch;
+  }
+
+  .pricebar {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .price {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--good);
+    background: var(--good-soft);
+    border: 1px solid var(--good);
+    border-radius: 3px;
+    padding: 3px 8px;
+  }
+
+  .zlink {
+    margin-left: auto;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+  .zlink:hover, .zlink:focus-visible { border-bottom-color: var(--accent); }
+  .zlink:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .stamp {
+    position: absolute;
+    top: -6px;
+    right: -4px;
+    transform: rotate(-9deg);
+    border: 3px solid var(--good);
+    color: var(--good);
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.15;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 8px 14px;
+    border-radius: 8px;
+    opacity: 0.9;
+    mix-blend-mode: multiply;
+  }
+  .stamp--caution { border-color: var(--caution); color: var(--caution); }
+
+  /* ---------- Hero stats ---------- */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    margin: 28px 0;
+    border: 1px solid var(--rule);
+  }
+
+  .stat {
+    background: var(--paper-raised);
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat--good { background: var(--good-soft); }
+  .stat--caution { background: var(--caution-soft); }
+  .stat--caution .stat-value { color: var(--caution); }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .stat-value {
+    font-family: "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 26px;
+    font-weight: 700;
+  }
+
+  .stat--good .stat-value { color: var(--good); }
+
+  .stat-note {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Ledger blocks ---------- */
+  .ledger-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 36px;
+  }
+
+  .ledger-block h2 {
+    font-size: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  tr { border-bottom: 1px solid var(--rule); }
+  tr:last-child { border-bottom: none; }
+
+  td, th {
+    padding: 7px 0;
+    text-align: left;
+    vertical-align: baseline;
+  }
+
+  td.label { color: var(--ink); }
+  td.value {
+    font-family: "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+    padding-left: 10px;
+  }
+  td.tagcell { text-align: right; padding-left: 8px; width: 1%; }
+
+  tr.subtotal td { border-top: 1px solid var(--ink); font-weight: 700; }
+  tr.total td {
+    border-top: 3px double var(--ink);
+    font-weight: 700;
+    font-size: 15px;
+  }
+  tr.total td.value { color: var(--accent); }
+  tr.total.negative td.value { color: var(--critical); }
+  tr.deduction td.value { color: var(--critical); }
+
+  .tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    padding: 2px 5px;
+    white-space: nowrap;
+  }
+  .tag--sourced { color: var(--accent); background: var(--accent-soft); }
+  .tag--estimated { color: var(--caution); background: var(--caution-soft); }
+
+  /* ---------- Sources / footer ---------- */
+  .sources {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+  }
+  .sources h3 {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin-bottom: 10px;
+  }
+  .sources ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .sources li { font-size: 13.5px; color: var(--ink-soft); display: flex; gap: 8px; align-items: baseline; }
+  .sources li .tag { flex-shrink: 0; }
+  .timestamp { margin: 14px 0 0; font-size: 12px; color: var(--ink-soft); font-style: italic; }
+
+  @media (max-width: 640px) {
+    .sheet { padding: 28px 20px 24px; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .ledger-grid { grid-template-columns: 1fr; }
+    .stamp { position: static; display: inline-block; margin-bottom: 14px; transform: rotate(-4deg); }
+    .zlink { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <header class="masthead">
+    <div class="stamp stamp--caution">13.79% CoC<br>Below Target</div>
+    <p class="eyebrow">Rental Underwriting &middot; MLS #399760 &middot; Leon County, FL</p>
+    <h1>3507 Southland Dr</h1>
+    <p class="subtitle">Tallahassee, FL 32305 &middot; Duplex, 2 units &middot; 2&nbsp;bd / 1&nbsp;ba each &middot; 1,986 sqft total &middot; Built 1973</p>
+    <div class="pricebar">
+      <span class="price num">$169,900</span>
+      <span class="pill">For Sale</span>
+      <a class="zlink" href="https://www.zillow.com/homedetails/3507-Southland-Dr-Tallahassee-FL-32305/45621753_zpid/" target="_blank" rel="noopener">View listing on Zillow ↗</a>
+    </div>
+  </header>
+
+  <section class="hero-stats">
+    <div class="stat stat--caution">
+      <span class="stat-label">Cash-on-Cash ROI</span>
+      <span class="stat-value">13.79%</span>
+      <span class="stat-note">target &ge; 15% &mdash; not met</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Cap Rate</span>
+      <span class="stat-value">9.72%</span>
+      <span class="stat-note">unlevered</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Monthly Cash Flow</span>
+      <span class="stat-value">$546.73</span>
+      <span class="stat-note">after debt service</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Total ROI</span>
+      <span class="stat-value">16.63%</span>
+      <span class="stat-note">incl. equity build</span>
+    </div>
+  </section>
+
+  <section class="ledger-grid">
+    <div class="ledger-block">
+      <h2>Deal Terms</h2>
+      <table>
+        <tr><td class="label">List price</td><td class="value num">$169,900.00</td><td class="tagcell"><span class="tag tag--sourced">Sourced</span></td></tr>
+        <tr><td class="label">Down payment (25%)</td><td class="value num">$42,475.00</td><td class="tagcell"></td></tr>
+        <tr><td class="label">Closing costs (3% of price)</td><td class="value num">$5,097.00</td><td class="tagcell"><span class="tag tag--estimated">Est.</span></td></tr>
+        <tr class="subtotal"><td class="label">Total cash invested</td><td class="value num">$47,572.00</td><td class="tagcell"></td></tr>
+        <tr><td class="label">Loan amount</td><td class="value num">$127,425.00</td><td class="tagcell"></td></tr>
+        <tr><td class="label">Rate, 30-yr investment fixed</td><td class="value num">6.78%</td><td class="tagcell"><span class="tag tag--sourced">Sourced</span></td></tr>
+        <tr class="subtotal"><td class="label">Monthly P&amp;I payment</td><td class="value num">$829.02</td><td class="tagcell"></td></tr>
+      </table>
+    </div>
+
+    <div class="ledger-block">
+      <h2>Monthly Income</h2>
+      <table>
+        <tr><td class="label">Unit 1 rent</td><td class="value num">$1,100.00</td><td class="tagcell"><span class="tag tag--estimated">Est.</span></td></tr>
+        <tr><td class="label">Unit 2 rent</td><td class="value num">$1,100.00</td><td class="tagcell"><span class="tag tag--estimated">Est.</span></td></tr>
+        <tr><td class="label">Gross rent</td><td class="value num">$2,200.00</td><td class="tagcell"></td></tr>
+        <tr class="deduction"><td class="label">Vacancy reserve (5%)</td><td class="value num">&minus;$110.00</td><td class="tagcell"></td></tr>
+        <tr class="subtotal"><td class="label">Effective monthly income</td><td class="value num">$2,090.00</td><td class="tagcell"></td></tr>
+      </table>
+    </div>
+
+    <div class="ledger-block">
+      <h2>Monthly Operating Expenses</h2>
+      <table>
+        <tr><td class="label">Property taxes</td><td class="value num">$209.25</td><td class="tagcell"><span class="tag tag--sourced">Sourced</span></td></tr>
+        <tr><td class="label">Insurance</td><td class="value num">$175.00</td><td class="tagcell"><span class="tag tag--estimated">Est.</span></td></tr>
+        <tr><td class="label">Maintenance (5% of rent)</td><td class="value num">$110.00</td><td class="tagcell"><span class="tag tag--estimated">Est.</span></td></tr>
+        <tr><td class="label">Repairs (5% of rent)</td><td class="value num">$110.00</td><td class="tagcell"><span class="tag tag--estimated">Est.</span></td></tr>
+        <tr><td class="label">CapEx reserve (5% of rent)</td><td class="value num">$110.00</td><td class="tagcell"></td></tr>
+        <tr class="subtotal"><td class="label">Total operating &amp; reserves</td><td class="value num">$714.25</td><td class="tagcell"></td></tr>
+      </table>
+    </div>
+
+    <div class="ledger-block">
+      <h2>Annual Returns</h2>
+      <table>
+        <tr><td class="label">Net operating income</td><td class="value num">$16,509.00</td><td class="tagcell"></td></tr>
+        <tr><td class="label">Debt service (P&amp;I)</td><td class="value num">&minus;$9,948.23</td><td class="tagcell"></td></tr>
+        <tr class="subtotal"><td class="label">Annual cash flow</td><td class="value num">$6,560.77</td><td class="tagcell"></td></tr>
+        <tr><td class="label">+ Year 1 principal paid</td><td class="value num">$1,350.26</td><td class="tagcell"></td></tr>
+        <tr class="total"><td class="label">Total first-year return</td><td class="value num">$7,911.03</td><td class="tagcell"></td></tr>
+        <tr><td class="label" style="color: var(--ink-soft); font-size: 12.5px;">&rarr; on $47,572 total cash invested</td><td class="value num" style="color: var(--ink-soft); font-size: 12.5px;">16.63%</td><td class="tagcell"></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer class="sources">
+    <h3>Sources &amp; assumptions</h3>
+    <ul>
+      <li><span class="tag tag--sourced">Sourced</span> List price &amp; property tax figure from the active MLS listing (#399760), cross-checked against Zillow's own tax estimate for the same parcel.</li>
+      <li><span class="tag tag--sourced">Sourced</span> 6.78% rate is Bankrate's national average for 30-yr fixed investment-property mortgages, Aug&nbsp;12, 2026.</li>
+      <li><span class="tag tag--estimated">Est.</span> Rent ($1,100/unit), insurance, maintenance, and repairs are educated guesses based on Tallahassee-area comps &mdash; not a signed lease, insurance quote, or contractor estimate. Zillow's own Rent&nbsp;Zestimate for this parcel is $1,202/mo but is unreliable for multi-family listings.</li>
+      <li><span class="tag tag--estimated">Est.</span> Closing costs assumed at 3% of price (loan origination, title, appraisal, recording) &mdash; not a lender-issued Loan Estimate. Both ROI figures now divide by total cash invested (down payment + closing costs), not down payment alone.</li>
+    </ul>
+    <p class="timestamp">Underwritten Aug 12, 2026 for informal deal-screening only &mdash; verify rent, insurance, and closing costs before making an offer.</p>
+  </footer>
+</div>
+
+</body>
+</html>
